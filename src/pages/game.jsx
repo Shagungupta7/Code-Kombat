@@ -19,6 +19,7 @@ const Game = () => {
   const [timeLeft, setTimeLeft] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [winner, setWinner] = useState(null);
+  const [testResults, setTestResults] = useState([]);
 
   useEffect(() => {
     const roomRef = doc(db, "Rooms", code);
@@ -88,51 +89,72 @@ const Game = () => {
   const handleRunCode = async () => {
     if (gameOver) return alert("⏳ Game is over!");
     if (!problem) return alert("No problem loaded yet!");
+    if (!problem.testCases || problem.testCases.length === 0) 
+      return alert("No test cases found for this problem!");
 
     setLoading(true);
-    setOutput("");
+    setTestResults([]);
+    const user = JSON.parse(localStorage.getItem("user"));
 
     try {
-      const options = {
-        method: "POST",
-        url: "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true",
-        headers: {
-          "content-type": "application/json",
-          "X-RapidAPI-Key": import.meta.env.VITE_JUDGE0_KEY,
-          "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
-        },
-        data: {
-          language_id: 63,
-          source_code: codeEditor,
-          stdin: problem.sampleInput || "",
-        },
-      };
+      let allPassed = true;
+      const results = []; // ✅ declare results here
 
-      const response = await axios.request(options);
-      const result = response.data.stdout?.trim();
-      setOutput(result || response.data.stderr || "No Output");
+      for (let i = 0; i < problem.testCases.length; i++) {
+        const test = problem.testCases[i];
+        const options = {
+          method: "POST",
+          url: "https://judge0-ce.p.rapidapi.com/submissions?base64_encoded=false&wait=true",
+          headers: {
+            "content-type": "application/json",
+            "X-RapidAPI-Key": import.meta.env.VITE_JUDGE0_KEY,
+            "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
+          },
+          data: {
+            language_id: 63,
+            source_code: codeEditor,
+            stdin: test.input,
+          },
+        };
 
-      const user = JSON.parse(localStorage.getItem("user"));
-      if (result === problem.sampleOutput.trim()) {
-        alert("✅ Correct Answer!");
+        const response = await axios.request(options);
+        const output = response.data.stdout?.trim() || response.data.stderr?.trim() || "";
+        const passed = output === test.expectedOutput;
+
+        if (!passed) allPassed = false;
+
+        results.push({
+          index: i + 1,
+          input: test.input,
+          expected: test.expectedOutput,
+          output,
+          passed,
+        });
+      }
+
+      setTestResults(results); // ✅ update UI once after all test cases
+
+      if (allPassed) {
+        alert("✅ All Test Cases Passed!");
         if (user?.uid) {
           const roomRef = doc(db, "Rooms", code);
           await updateDoc(roomRef, {
             [`players.${user.uid}.score`]: increment(10),
           });
-          // 🎉 End game instantly for all
-          await handleGameOver(user.uid);
+          await handleGameOver(user.uid); // end game instantly
         }
       } else {
-        alert("❌ Wrong Answer. Try Again!");
+        alert("❌ Some Test Cases Failed. Check the results below!");
       }
+
     } catch (error) {
       console.error(error);
-      setOutput("Error executing code!");
+      setTestResults([{ index: "-", input: "-", expected: "-", output: "Error executing code!", passed: false }]);
     } finally {
       setLoading(false);
     }
   };
+
 
   // 🧾 Game Over Screen
   if (gameOver) {
@@ -181,7 +203,7 @@ const Game = () => {
             <h2 className="text-xl font-bold">🔹 {problem.title}</h2>
             <p className="mt-2">{problem.description}</p>
             <pre className="bg-gray-800 p-2 rounded-md mt-2 text-sm">
-              {`Input: ${problem.sampleInput}\nOutput: ${problem.sampleOutput}`}
+              {`Input: ${problem.testCases[0].input}\nOutput: ${problem.testCases[0].expectedOutput}`}
             </pre>
           </>
         ) : (
@@ -218,7 +240,7 @@ const Game = () => {
           onChange={(value) => setCodeEditor(value)}
         />
 
-        <div className="output-section w-1/3 p-4 bg-gray-800 border-l border-gray-700">
+        <div className="output-section w-1/3 p-4 bg-gray-800 border-l border-gray-700 overflow-auto">
           <button
             onClick={handleRunCode}
             disabled={loading}
@@ -227,9 +249,23 @@ const Game = () => {
             {loading ? "Running..." : "Run Code"}
           </button>
           <h3 className="text-lg font-semibold mb-2">Output:</h3>
-          <pre className="bg-black p-2 rounded-md text-green-400 overflow-auto">
-            {output}
-          </pre>
+          <div className="space-y-2">
+            {testResults.length === 0 && <p className="text-gray-400">Run the code to see results...</p>}
+            {testResults.map((t) => (
+              <div
+                key={t.index}
+                className={`p-2 rounded-md ${
+                  t.passed ? "bg-green-800 text-green-200" : "bg-red-800 text-red-200"
+                }`}
+              >
+                <strong>Test Case {t.index}</strong>
+                <p>Input: {t.input}</p>
+                <p>Expected: {t.expected}</p>
+                <p>Output: {t.output}</p>
+                <p>Status: {t.passed ? "✅ Passed" : "❌ Failed"}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </div>

@@ -2,354 +2,364 @@ import { db } from "./firebase";
 import { doc, setDoc } from "firebase/firestore";
 
 const problems = [
-// -------------------- EASY --------------------
+  // EASY PROBLEMS
   {
     id: "easy_1",
-    title: "Sum of Two Numbers",
-    description: "Given two integers, return their sum.",
-    difficulty: "easy",
+    title: "Even or Odd",
+    description: "Return 'Even' if the number is even, else 'Odd'.",
+    inputType: "int",
+    outputType: "string",
+    difficulty: "Easy",
     testCases: [
-      { input: "4 7", expectedOutput: "11" },
-      { input: "-3 5", expectedOutput: "2" },
-      { input: "0 0", expectedOutput: "0" },
-    ],
+      { input: "4", expectedOutput: "Even" },
+      { input: "7", expectedOutput: "Odd" }
+    ]
   },
   {
     id: "easy_2",
-    title: "Multiply Two Numbers",
-    description: "Given two integers, return their product.",
-    difficulty: "easy",
+    title: "Sum of Two Numbers",
+    description: "Return the sum of two integers.",
+    inputType: "int int",
+    outputType: "int",
+    difficulty: "Easy",
     testCases: [
-      { input: "3 4", expectedOutput: "12" },
-      { input: "-2 6", expectedOutput: "-12" },
-      { input: "0 99", expectedOutput: "0" },
-    ],
+      { input: "3 5", expectedOutput: "8" },
+      { input: "10 -2", expectedOutput: "8" }
+    ]
   },
   {
     id: "easy_3",
     title: "Find Maximum",
     description: "Return the maximum of two numbers.",
-    difficulty: "easy",
+    inputType: "int int",
+    outputType: "int",
+    difficulty: "Easy",
     testCases: [
-      { input: "3 9", expectedOutput: "9" },
-      { input: "7 2", expectedOutput: "7" },
-      { input: "-1 -5", expectedOutput: "-1" },
-    ],
+      { input: "7 12", expectedOutput: "12" },
+      { input: "-3 -9", expectedOutput: "-3" }
+    ]
   },
   {
     id: "easy_4",
-    title: "Even or Odd",
-    description: "Return 'Even' if the number is even, else 'Odd'.",
-    difficulty: "easy",
+    title: "Check Positive",
+    description: "Return 'Positive' if number > 0, else 'Non-Positive'.",
+    inputType: "int",
+    outputType: "string",
+    difficulty: "Easy",
     testCases: [
-      { input: "4", expectedOutput: "Even" },
-      { input: "7", expectedOutput: "Odd" },
-      { input: "0", expectedOutput: "Even" },
-    ],
+      { input: "5", expectedOutput: "Positive" },
+      { input: "-2", expectedOutput: "Non-Positive" }
+    ]
   },
   {
     id: "easy_5",
-    title: "Sum of Digits",
-    description: "Return the sum of digits of a given number.",
-    difficulty: "easy",
+    title: "Square a Number",
+    description: "Return the square of the input number.",
+    inputType: "int",
+    outputType: "int",
+    difficulty: "Easy",
     testCases: [
-      { input: "123", expectedOutput: "6" },
-      { input: "987", expectedOutput: "24" },
-      { input: "1001", expectedOutput: "2" },
-    ],
+      { input: "4", expectedOutput: "16" },
+      { input: "-3", expectedOutput: "9" }
+    ]
   },
   {
     id: "easy_6",
-    title: "Reverse String",
-    description: "Reverse the given string.",
-    difficulty: "easy",
+    title: "Check Divisible by 3",
+    description: "Return 'Yes' if number is divisible by 3, else 'No'.",
+    inputType: "int",
+    outputType: "string",
+    difficulty: "Easy",
     testCases: [
-      { input: "hello", expectedOutput: "olleh" },
-      { input: "abc", expectedOutput: "cba" },
-      { input: "a", expectedOutput: "a" },
-    ],
+      { input: "9", expectedOutput: "Yes" },
+      { input: "10", expectedOutput: "No" }
+    ]
   },
   {
     id: "easy_7",
-    title: "Check Palindrome",
-    description: "Return 'Yes' if the string is a palindrome, else 'No'.",
-    difficulty: "easy",
+    title: "Length of String",
+    description: "Return the length of the input string.",
+    inputType: "string",
+    outputType: "int",
+    difficulty: "Easy",
     testCases: [
-      { input: "madam", expectedOutput: "Yes" },
-      { input: "racecar", expectedOutput: "Yes" },
-      { input: "hello", expectedOutput: "No" },
-    ],
+      { input: "hello", expectedOutput: "5" },
+      { input: "", expectedOutput: "0" }
+    ]
   },
   {
     id: "easy_8",
-    title: "Count Vowels",
-    description: "Count the number of vowels in a string.",
-    difficulty: "easy",
+    title: "Reverse String",
+    description: "Return the reverse of the input string.",
+    inputType: "string",
+    outputType: "string",
+    difficulty: "Easy",
     testCases: [
-      { input: "hello", expectedOutput: "2" },
-      { input: "xyz", expectedOutput: "0" },
-      { input: "aeiou", expectedOutput: "5" },
-    ],
+      { input: "abc", expectedOutput: "cba" },
+      { input: "race", expectedOutput: "ecar" }
+    ]
   },
   {
     id: "easy_9",
-    title: "Square a Number",
-    description: "Return the square of a given number.",
-    difficulty: "easy",
+    title: "Check Vowel",
+    description: "Return 'Yes' if the input character is a vowel, else 'No'.",
+    inputType: "char",
+    outputType: "string",
+    difficulty: "Easy",
     testCases: [
-      { input: "5", expectedOutput: "25" },
-      { input: "-3", expectedOutput: "9" },
-      { input: "0", expectedOutput: "0" },
-    ],
+      { input: "a", expectedOutput: "Yes" },
+      { input: "b", expectedOutput: "No" }
+    ]
   },
   {
     id: "easy_10",
-    title: "Find Factorial",
-    description: "Return the factorial of a given number.",
-    difficulty: "easy",
+    title: "Absolute Value",
+    description: "Return the absolute value of a number.",
+    inputType: "int",
+    outputType: "int",
+    difficulty: "Easy",
     testCases: [
-      { input: "5", expectedOutput: "120" },
-      { input: "0", expectedOutput: "1" },
-      { input: "3", expectedOutput: "6" },
-    ],
+      { input: "-7", expectedOutput: "7" },
+      { input: "5", expectedOutput: "5" }
+    ]
   },
 
-  // -------------------- MEDIUM --------------------
+  // MEDIUM PROBLEMS
   {
     id: "medium_1",
-    title: "Fibonacci Number",
-    description: "Return the Nth Fibonacci number.",
-    difficulty: "medium",
+    title: "Palindrome Number",
+    description: "Return 'Yes' if the number is a palindrome, else 'No'.",
+    inputType: "int",
+    outputType: "string",
+    difficulty: "Medium",
     testCases: [
-      { input: "5", expectedOutput: "5" },
-      { input: "7", expectedOutput: "13" },
-      { input: "1", expectedOutput: "1" },
-    ],
+      { input: "121", expectedOutput: "Yes" },
+      { input: "123", expectedOutput: "No" }
+    ]
   },
   {
     id: "medium_2",
-    title: "Sum of Array",
-    description: "Return the sum of all elements in the array.",
-    difficulty: "medium",
+    title: "Factorial",
+    description: "Return the factorial of a number.",
+    inputType: "int",
+    outputType: "int",
+    difficulty: "Medium",
     testCases: [
-      { input: "1 2 3 4 5", expectedOutput: "15" },
-      { input: "10 10 10", expectedOutput: "30" },
-      { input: "-1 -2 -3", expectedOutput: "-6" },
-    ],
+      { input: "5", expectedOutput: "120" },
+      { input: "0", expectedOutput: "1" }
+    ]
   },
   {
     id: "medium_3",
-    title: "Find Second Largest",
-    description: "Return the second largest number in an array.",
-    difficulty: "medium",
+    title: "Fibonacci Nth",
+    description: "Return the Nth Fibonacci number (0-indexed).",
+    inputType: "int",
+    outputType: "int",
+    difficulty: "Medium",
     testCases: [
-      { input: "1 2 3 4", expectedOutput: "3" },
-      { input: "10 5 20", expectedOutput: "10" },
-      { input: "9 9 9 9", expectedOutput: "9" },
-    ],
+      { input: "5", expectedOutput: "5" },
+      { input: "0", expectedOutput: "0" }
+    ]
   },
   {
     id: "medium_4",
-    title: "Check Prime",
-    description: "Return 'Yes' if the number is prime, else 'No'.",
-    difficulty: "medium",
+    title: "GCD of Two Numbers",
+    description: "Return the greatest common divisor of two numbers.",
+    inputType: "int int",
+    outputType: "int",
+    difficulty: "Medium",
     testCases: [
-      { input: "7", expectedOutput: "Yes" },
-      { input: "9", expectedOutput: "No" },
-      { input: "2", expectedOutput: "Yes" },
-    ],
+      { input: "12 18", expectedOutput: "6" },
+      { input: "7 3", expectedOutput: "1" }
+    ]
   },
   {
     id: "medium_5",
-    title: "Count Words",
-    description: "Count the number of words in a sentence.",
-    difficulty: "medium",
+    title: "LCM of Two Numbers",
+    description: "Return the least common multiple of two numbers.",
+    inputType: "int int",
+    outputType: "int",
+    difficulty: "Medium",
     testCases: [
-      { input: "hello world", expectedOutput: "2" },
-      { input: "this is a test", expectedOutput: "4" },
-      { input: "one", expectedOutput: "1" },
-    ],
+      { input: "4 6", expectedOutput: "12" },
+      { input: "5 7", expectedOutput: "35" }
+    ]
   },
   {
     id: "medium_6",
-    title: "GCD of Two Numbers",
-    description: "Return the greatest common divisor of two numbers.",
-    difficulty: "medium",
+    title: "Check Prime",
+    description: "Return 'Yes' if number is prime, else 'No'.",
+    inputType: "int",
+    outputType: "string",
+    difficulty: "Medium",
     testCases: [
-      { input: "8 12", expectedOutput: "4" },
-      { input: "100 25", expectedOutput: "25" },
-      { input: "7 9", expectedOutput: "1" },
-    ],
+      { input: "11", expectedOutput: "Yes" },
+      { input: "12", expectedOutput: "No" }
+    ]
   },
   {
     id: "medium_7",
-    title: "Find Missing Number",
-    description:
-      "Given N-1 integers from 1 to N, find the missing number in the sequence.",
-    difficulty: "medium",
+    title: "Sum of Array",
+    description: "Return the sum of integers in an array (space-separated).",
+    inputType: "int[]",
+    outputType: "int",
+    difficulty: "Medium",
     testCases: [
-      { input: "1 2 4 5", expectedOutput: "3" },
-      { input: "2 3 1 6 5", expectedOutput: "4" },
-      { input: "1", expectedOutput: "2" },
-    ],
+      { input: "1 2 3", expectedOutput: "6" },
+      { input: "5 5 5", expectedOutput: "15" }
+    ]
   },
   {
     id: "medium_8",
-    title: "Reverse Words",
-    description: "Reverse the order of words in a sentence.",
-    difficulty: "medium",
+    title: "Reverse Array",
+    description: "Return the array reversed as space-separated integers.",
+    inputType: "int[]",
+    outputType: "string",
+    difficulty: "Medium",
     testCases: [
-      { input: "hello world", expectedOutput: "world hello" },
-      { input: "I love JS", expectedOutput: "JS love I" },
-      { input: "a b c", expectedOutput: "c b a" },
-    ],
+      { input: "1 2 3", expectedOutput: "3 2 1" },
+      { input: "4 5 6", expectedOutput: "6 5 4" }
+    ]
   },
   {
     id: "medium_9",
-    title: "Check Anagram",
-    description: "Return 'Yes' if two strings are anagrams, else 'No'.",
-    difficulty: "medium",
+    title: "Count Vowels in String",
+    description: "Return the number of vowels in the input string.",
+    inputType: "string",
+    outputType: "int",
+    difficulty: "Medium",
     testCases: [
-      { input: "listen silent", expectedOutput: "Yes" },
-      { input: "hello world", expectedOutput: "No" },
-      { input: "race care", expectedOutput: "Yes" },
-    ],
+      { input: "hello", expectedOutput: "2" },
+      { input: "xyz", expectedOutput: "0" }
+    ]
   },
   {
     id: "medium_10",
-    title: "Binary to Decimal",
-    description: "Convert a binary number to decimal.",
-    difficulty: "medium",
+    title: "Sum of Digits",
+    description: "Return the sum of digits of the number.",
+    inputType: "int",
+    outputType: "int",
+    difficulty: "Medium",
     testCases: [
-      { input: "1010", expectedOutput: "10" },
-      { input: "111", expectedOutput: "7" },
-      { input: "0", expectedOutput: "0" },
-    ],
+      { input: "123", expectedOutput: "6" },
+      { input: "456", expectedOutput: "15" }
+    ]
   },
 
-  // -------------------- HARD --------------------
+  // HARD PROBLEMS
   {
     id: "hard_1",
-    title: "Longest Common Prefix",
-    description:
-      "Given N strings, return the longest common prefix among them.",
-    difficulty: "hard",
+    title: "Power of Number",
+    description: "Return x raised to the power y.",
+    inputType: "int int",
+    outputType: "int",
+    difficulty: "Hard",
     testCases: [
-      { input: "flower flow flight", expectedOutput: "fl" },
-      { input: "dog racecar car", expectedOutput: "" },
-      { input: "apple app apt", expectedOutput: "ap" },
-    ],
+      { input: "2 3", expectedOutput: "8" },
+      { input: "5 0", expectedOutput: "1" }
+    ]
   },
   {
     id: "hard_2",
-    title: "Nth Prime Number",
-    description: "Return the Nth prime number.",
-    difficulty: "hard",
+    title: "Count Primes in Range",
+    description: "Return the number of primes between a and b (inclusive).",
+    inputType: "int int",
+    outputType: "int",
+    difficulty: "Hard",
     testCases: [
-      { input: "1", expectedOutput: "2" },
-      { input: "5", expectedOutput: "11" },
-      { input: "10", expectedOutput: "29" },
-    ],
+      { input: "1 10", expectedOutput: "4" },
+      { input: "10 20", expectedOutput: "4" }
+    ]
   },
   {
     id: "hard_3",
-    title: "Power of Number",
-    description:
-      "Given base and exponent, return base raised to the power exponent.",
-    difficulty: "hard",
+    title: "Longest Palindrome Substring",
+    description: "Return the length of the longest palindrome substring.",
+    inputType: "string",
+    outputType: "int",
+    difficulty: "Hard",
     testCases: [
-      { input: "2 10", expectedOutput: "1024" },
-      { input: "3 3", expectedOutput: "27" },
-      { input: "5 0", expectedOutput: "1" },
-    ],
+      { input: "babad", expectedOutput: "3" },
+      { input: "cbbd", expectedOutput: "2" }
+    ]
   },
   {
     id: "hard_4",
-    title: "Count Inversions",
-    description: "Count number of inversions in an array.",
-    difficulty: "hard",
+    title: "Matrix Diagonal Sum",
+    description: "Return the sum of the main diagonal of a square matrix (space-separated rows).",
+    inputType: "int[][]",
+    outputType: "int",
+    difficulty: "Hard",
     testCases: [
-      { input: "1 20 6 4 5", expectedOutput: "5" },
-      { input: "2 4 1 3 5", expectedOutput: "3" },
-      { input: "1 2 3", expectedOutput: "0" },
-    ],
+      { input: "1 2 3\n4 5 6\n7 8 9", expectedOutput: "15" },
+      { input: "1 0 0\n0 1 0\n0 0 1", expectedOutput: "3" }
+    ]
   },
   {
     id: "hard_5",
-    title: "Valid Parentheses",
-    description:
-      "Return 'Yes' if parentheses are valid, otherwise 'No'.",
-    difficulty: "hard",
+    title: "Merge Sorted Arrays",
+    description: "Return the merged sorted array (space-separated).",
+    inputType: "int[] int[]",
+    outputType: "string",
+    difficulty: "Hard",
     testCases: [
-      { input: "()[]{}", expectedOutput: "Yes" },
-      { input: "(]", expectedOutput: "No" },
-      { input: "({[]})", expectedOutput: "Yes" },
-    ],
+      { input: "1 3 5 2 4 6", expectedOutput: "1 2 3 4 5 6" },
+      { input: "10 20 5 15", expectedOutput: "5 10 15 20" }
+    ]
   },
   {
     id: "hard_6",
-    title: "Maze Paths",
-    description:
-      "Given N x N grid, count number of paths from top-left to bottom-right (move only right or down).",
-    difficulty: "hard",
+    title: "Find Missing Number",
+    description: "Return the missing number from 1 to n in array.",
+    inputType: "int[]",
+    outputType: "int",
+    difficulty: "Hard",
     testCases: [
-      { input: "2", expectedOutput: "2" },
-      { input: "3", expectedOutput: "6" },
-      { input: "1", expectedOutput: "1" },
-    ],
+      { input: "1 2 4 5", expectedOutput: "3" },
+      { input: "2 3 4 5", expectedOutput: "1" }
+    ]
   },
   {
     id: "hard_7",
-    title: "Subarray Sum Equals K",
-    description:
-      "Given an array and integer K, count the number of subarrays whose sum equals K.",
-    difficulty: "hard",
+    title: "Stock Buy & Sell",
+    description: "Return max profit from one buy/sell of prices array.",
+    inputType: "int[]",
+    outputType: "int",
+    difficulty: "Hard",
     testCases: [
-      { input: "1 1 1 2", expectedOutput: "2" },
-      { input: "1 2 3", expectedOutput: "2" },
-      { input: "3 3 3", expectedOutput: "2" },
-    ],
+      { input: "7 1 5 3 6 4", expectedOutput: "5" },
+      { input: "7 6 4 3 1", expectedOutput: "0" }
+    ]
   },
   {
     id: "hard_8",
-    title: "Longest Palindromic Substring",
-    description: "Return the longest palindromic substring.",
-    difficulty: "hard",
+    title: "String Compression",
+    description: "Return the run-length encoded string.",
+    inputType: "string",
+    outputType: "string",
+    difficulty: "Hard",
     testCases: [
-      { input: "babad", expectedOutput: "bab" },
-      { input: "cbbd", expectedOutput: "bb" },
-      { input: "a", expectedOutput: "a" },
-    ],
+      { input: "aaabbc", expectedOutput: "a3b2c1" },
+      { input: "abcd", expectedOutput: "a1b1c1d1" }
+    ]
   },
   {
     id: "hard_9",
-    title: "Word Ladder Steps",
-    description:
-      "Given begin and end words and dictionary, return min transformation steps (each step changes one letter).",
-    difficulty: "hard",
+    title: "Max Subarray Sum",
+    description: "Return maximum sum of contiguous subarray.",
+    inputType: "int[]",
+    outputType: "int",
+    difficulty: "Hard",
     testCases: [
-      { input: "hit cog hot dot dog lot log cog", expectedOutput: "5" },
-      { input: "a c a b b c", expectedOutput: "2" },
-      { input: "abc xyz", expectedOutput: "0" },
-    ],
-  },
-  {
-    id: "hard_10",
-    title: "Matrix Spiral Print",
-    description:
-      "Given N x N matrix, print elements in spiral order.",
-    difficulty: "hard",
-    testCases: [
-      { input: "1 2 3 4 5 6 7 8 9", expectedOutput: "1 2 3 6 9 8 7 4 5" },
-      { input: "1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16", expectedOutput: "1 2 3 4 8 12 16 15 14 13 9 5 6 7 11 10" },
-      { input: "1", expectedOutput: "1" },
-    ],
-  },
+      { input: "-2 1 -3 4 -1 2 1 -5 4", expectedOutput: "6" },
+      { input: "1 2 3 4", expectedOutput: "10" }
+    ]
+  }
 ];
 
 export const seedProblems = async () => {
   for (let p of problems) {
-    const docRef = doc(db, "NewProblems", p.id);
+    const docRef = doc(db, "Problems", p.id);
     await setDoc(docRef, p);
     console.log(`✅ Added problem: ${p.title}`);
   }

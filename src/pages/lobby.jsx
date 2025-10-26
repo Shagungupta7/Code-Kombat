@@ -6,7 +6,7 @@ import { doc, updateDoc, setDoc, getDoc, deleteDoc } from "firebase/firestore";
 const Lobby = () => {
     const navigate = useNavigate();
     const user = JSON.parse(localStorage.getItem("user"));
-    const [difficulty, setDifficulty] = useState("easy");
+    const [difficulty, setDifficulty] = useState("Easy");
     const [roomCode, setRoomCode] = useState("");
 
     const handleCreateRoom = async () => {
@@ -66,9 +66,9 @@ const Lobby = () => {
                     onChange={(e) => setDifficulty(e.target.value)}
                     className="p-2 mb-4 rounded text-black"
                 >
-                    <option value="easy">🟢 Easy</option>
-                    <option value="medium">🟡 Medium</option>
-                    <option value="hard">🔴 Hard</option>
+                    <option value="Easy">🟢 Easy</option>
+                    <option value="Medium">🟡 Medium</option>
+                    <option value="Hard">🔴 Hard</option>
                 </select>
                 <button onClick={handleCreateRoom}>Create Room</button>
             </div>

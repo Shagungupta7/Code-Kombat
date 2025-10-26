@@ -10,9 +10,9 @@ const Room = () => {
     const [players, setPlayers] = useState({});
     const user = JSON.parse(localStorage.getItem("user"));
     const TIMER_DURATION = {
-        easy: 10 * 60,    // 10 minutes
-        medium: 20 * 60,  // 20 minutes
-        hard: 30 * 60,    // 30 minutes
+        Easy: 10 * 60,    // 10 minutes
+        Medium: 20 * 60,  // 20 minutes
+        Hard: 30 * 60,    // 30 minutes
     };
     console.log("Room data:", roomData);
     console.log("User:", user);
@@ -43,7 +43,7 @@ const Room = () => {
 
     const handleStartGame = async () => {
         const selectedDifficulty = roomData.difficulty;
-        const problemsRef = collection(db, "NewProblems");
+        const problemsRef = collection(db, "Problems");
         const q = query(problemsRef, where("difficulty", "==", selectedDifficulty));
         const snapshot = await getDocs(q);
         const allProblems = snapshot.docs.map((doc) => doc.data());

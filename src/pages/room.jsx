@@ -43,7 +43,7 @@ const Room = () => {
 
     const handleStartGame = async () => {
         const selectedDifficulty = roomData.difficulty;
-        const problemsRef = collection(db, "Problems");
+        const problemsRef = collection(db, "NewProblems");
         const q = query(problemsRef, where("difficulty", "==", selectedDifficulty));
         const snapshot = await getDocs(q);
         const allProblems = snapshot.docs.map((doc) => doc.data());

@@ -4,11 +4,15 @@ import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import Particles from "react-tsparticles";
+import { loadFull } from "tsparticles";
 
 const Home = ({ onLogin, onSignUp }) => {
   const [nickname, setNickname] = useState("");
   const [showNickname, setShowNickname] = useState(false);
   const navigate = useNavigate();
+    const particlesInit = async (main) => {
+    await loadFull(main);
+    };
 
   const handleLogin = async () => {
     try {
@@ -76,7 +80,7 @@ const Home = ({ onLogin, onSignUp }) => {
             links: { enable: true, color: "#0ff", distance: 150 },
             move: { enable: true, speed: 2 },
             number: { value: 50 },
-            size: { value: 3 },
+            size: { value: 1 },
           },
         }}
       />

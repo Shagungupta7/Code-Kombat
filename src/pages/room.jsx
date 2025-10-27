@@ -9,6 +9,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 import { db } from "../firebase";
+import Particles from "react-tsparticles";
 import { useParams, useNavigate } from "react-router-dom";
 
 const Room = () => {
@@ -48,7 +49,7 @@ const Room = () => {
 
   const handleStartGame = async () => {
     const selectedDifficulty = roomData.difficulty;
-    const problemsRef = collection(db, "Problems");
+    const problemsRef = collection(db, "NewProblems");
     const q = query(problemsRef, where("difficulty", "==", selectedDifficulty));
     const snapshot = await getDocs(q);
     const allProblems = snapshot.docs.map((doc) => doc.data());
@@ -65,7 +66,25 @@ const Room = () => {
   };
 
   return (
+    
     <div className="room-container">
+    <Particles
+            className="particles"
+            options={{
+              background: { color: { value: "#0a0a0a" } },
+              fpsLimit: 60,
+              interactivity: {
+                events: { onHover: { enable: true, mode: "repulse" } },
+              },
+              particles: {
+                color: { value: "#0ff" },
+                links: { enable: true, color: "#0ff", distance: 150 },
+                move: { enable: true, speed: 2 },
+                number: { value: 50 },
+                size: { value: 3 },
+              },
+            }}
+          />
       <div className="room-card">
         {!roomData ? (
           <p className="loading-text">Loading room...</p>
@@ -103,13 +122,14 @@ const Room = () => {
         @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
 
         .room-container {
+          position: relative;
           height: 100vh;
           display: flex;
           justify-content: center;
           align-items: center;
           background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-          color: #fff;
           font-family: "Orbitron", sans-serif;
+          color: #fff;
           overflow: hidden;
         }
 

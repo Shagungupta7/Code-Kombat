@@ -22,7 +22,10 @@
     "axios": "^1.12.2",
     "firebase": "^12.4.0",
     "framer-motion": "^12.23.24",
+    "react-confetti": "^6.4.0",
     "react-router-dom": "^7.9.4",
-    "react-tsparticles": "^2.12.2"
+    "react-tsparticles": "^2.12.2",
+    "react-use": "^17.6.0",
+    "tsparticles": "^3.9.1"
   }
 }

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
+import Particles from "react-tsparticles";
 import { doc, updateDoc, setDoc, getDoc } from "firebase/firestore";
 
 const Lobby = () => {
@@ -58,6 +59,23 @@ const Lobby = () => {
 
   return (
     <div className="lobby-container">
+    <Particles
+            className="particles"
+            options={{
+              background: { color: { value: "#0a0a0a" } },
+              fpsLimit: 60,
+              interactivity: {
+                events: { onHover: { enable: true, mode: "repulse" } },
+              },
+              particles: {
+                color: { value: "#0ff" },
+                links: { enable: true, color: "#0ff", distance: 150 },
+                move: { enable: true, speed: 2 },
+                number: { value: 50 },
+                size: { value: 3 },
+              },
+            }}
+          />
       <div className="lobby-card">
         <h2 className="title">Welcome, {user?.nickname || "Player"}!</h2>
 
@@ -97,13 +115,14 @@ const Lobby = () => {
         @import url("https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap");
 
         .lobby-container {
+          position: relative;
           height: 100vh;
           display: flex;
           justify-content: center;
           align-items: center;
           background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-          color: #fff;
           font-family: "Orbitron", sans-serif;
+          color: #fff;
           overflow: hidden;
         }
 
@@ -115,6 +134,7 @@ const Lobby = () => {
           box-shadow: 0 0 20px #0ff;
           text-align: center;
           min-width: 350px;
+          z-index: 1;
         }
 
         .title {
@@ -183,7 +203,14 @@ const Lobby = () => {
           transition: 0.3s;
           cursor: pointer;
         }
-
+        .particles {
+          position: fixed; /* ensure full coverage */
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0; /* background layer */
+        }
         .btn-neon:hover {
           box-shadow: 0 0 20px #0ff, 0 0 40px #0ff;
           transform: scale(1.05);

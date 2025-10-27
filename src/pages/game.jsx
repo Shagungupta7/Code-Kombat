@@ -10,7 +10,7 @@ const Game = () => {
   const navigate = useNavigate();
 
   const [codeEditor, setCodeEditor] = useState("");
-  const [language, setLanguage] = useState(63); // Default: JavaScript
+  const [language, setLanguage] = useState(63);
   const [problem, setProblem] = useState(null);
   const [players, setPlayers] = useState({});
   const [duration, setDuration] = useState(0);
@@ -29,7 +29,7 @@ const Game = () => {
     { id: 72, name: "C++" },
   ];
 
-  // Fetch room + problem data
+  // Fetch data from Firestore
   useEffect(() => {
     const roomRef = doc(db, "Rooms", code);
     const unsubscribe = onSnapshot(roomRef, (snapshot) => {
@@ -46,7 +46,7 @@ const Game = () => {
     return () => unsubscribe();
   }, [code]);
 
-  // Timer logic
+  // Timer
   useEffect(() => {
     if (!startTime || !duration || gameOver) return;
     const interval = setInterval(() => {
@@ -67,14 +67,6 @@ const Game = () => {
     setTimeout(async () => await deleteDoc(roomRef), 3000);
   };
 
-  useEffect(() => {
-    if (gameOver) {
-      const timeout = setTimeout(() => navigate("/lobby"), 4000);
-      return () => clearTimeout(timeout);
-    }
-  }, [gameOver, navigate]);
-
-  // Run user code
   const handleRunCode = async () => {
     if (!problem?.testCases?.length) return alert("No test cases!");
     setLoading(true);
@@ -119,18 +111,16 @@ const Game = () => {
       }
     } catch (err) {
       console.error(err);
-      console.error(err.response?.data || err);
       setTestResults([{ input: "-", expected: "-", output: "Error running code", passed: false }]);
     } finally {
       setLoading(false);
     }
   };
 
-  // Game over UI
   if (gameOver) {
     const winnerPlayer = winner ? players[winner] : null;
     return (
-      <div className="flex flex-col items-center justify-center h-screen bg-gray-900 text-white">
+      <div className="flex flex-col items-center justify-center h-screen bg-[#0b0f19] text-white font-josefin">
         <h1 className="text-4xl font-bold mb-4">🏁 Game Over!</h1>
         {winnerPlayer ? (
           <h2 className="text-2xl text-green-400">🎉 Winner: {winnerPlayer.nickname} 🏆</h2>
@@ -148,7 +138,7 @@ const Game = () => {
         </ul>
         <button
           onClick={() => navigate("/lobby")}
-          className="mt-6 bg-blue-600 px-4 py-2 rounded hover:bg-blue-700"
+          className="mt-6 bg-blue-600 px-4 py-2 rounded hover:bg-blue-700 transition"
         >
           Return to Lobby
         </button>
@@ -157,93 +147,99 @@ const Game = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-900 text-white">
-      {/* Problem Section */}
-      <div className="p-4 border-b border-gray-700">
-        {problem ? (
-          <>
-            <h2 className="text-xl font-bold">🔹 {problem.title}</h2>
-            <p className="mt-2">{problem.description}</p>
-            {problem.testCases?.length > 0 && (
-              <pre className="bg-gray-800 p-2 rounded mt-2 text-sm">{`Example:\nInput: ${problem.testCases[0].input}\nOutput: ${problem.testCases[0].expectedOutput}`}</pre>
-            )}
-          </>
-        ) : (
-          <p>Loading problem...</p>
-        )}
+    <div className="flex h-screen bg-[#0b0f19] text-white font-josefin overflow-hidden">
+      {/* LEFT PANEL */}
+      <div className="w-[35%] flex flex-col p-6 border-r border-gray-800 overflow-y-auto">
+        <div className="bg-[#11172a] rounded-2xl shadow-lg p-5 mb-6">
+          {problem ? (
+            <>
+              <h2 className="text-2xl font-bold mb-2 text-blue-400">{problem.title}</h2>
+              <p className="text-sm leading-relaxed text-gray-300">{problem.description}</p>
+              {problem.testCases?.length > 0 && (
+                <pre className="bg-[#0e1423] p-3 rounded-lg mt-3 text-sm border border-gray-700">
+                  {`Example:\nInput: ${problem.testCases[0].input}\nOutput: ${problem.testCases[0].expectedOutput}`}
+                </pre>
+              )}
+            </>
+          ) : (
+            <p>Loading problem...</p>
+          )}
+        </div>
+
+        <div className="bg-[#11172a] rounded-2xl shadow-lg p-5 mb-6">
+          <h3 className="font-semibold mb-2 text-lg text-blue-400">🏆 Players</h3>
+          <ul className="space-y-1 text-sm">
+            {Object.entries(players).map(([uid, p]) => (
+              <li key={uid}>
+                {p.nickname} — {p.status} — 🏆 {p.score || 0}
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="bg-[#11172a] rounded-2xl shadow-lg p-4 text-center">
+          <h4 className="text-yellow-400 text-xl font-mono">
+            ⏳ {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
+          </h4>
+          <div className="mt-3">
+            <label className="mr-2 text-gray-300">Language:</label>
+            <select
+              value={language}
+              onChange={(e) => setLanguage(parseInt(e.target.value))}
+              className="bg-[#0e1423] border border-gray-700 text-white p-1 rounded"
+            >
+              {languageOptions.map((l) => (
+                <option key={l.id} value={l.id}>
+                  {l.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
       </div>
 
-      {/* Players Section */}
-      <div className="p-4 border-b border-gray-700">
-        <h3 className="font-semibold mb-2">🏆 Players:</h3>
-        <ul className="space-y-1">
-          {Object.entries(players).map(([uid, p]) => (
-            <li key={uid}>
-              {p.nickname} — {p.status} — 🏆 {p.score || 0}
-            </li>
-          ))}
-        </ul>
-      </div>
+      {/* RIGHT PANEL */}
+      <div className="flex-1 flex flex-col p-4">
+        <div className="flex-1 bg-[#11172a] rounded-2xl shadow-lg overflow-hidden mb-4">
+          <Editor
+            height="100%"
+            theme="vs-dark"
+            language={
+              languageOptions.find((l) => l.id === language)?.name.toLowerCase() || "javascript"
+            }
+            value={codeEditor}
+            onChange={setCodeEditor}
+          />
+        </div>
 
-      {/* Timer */}
-      <div className="text-center text-yellow-400 my-2 text-2xl font-mono">
-        ⏳ {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, "0")}
-      </div>
-
-      {/* Language Selector */}
-      <div className="mb-2">
-        <label className="mr-2">Language:</label>
-        <select
-          value={language}
-          onChange={(e) => setLanguage(parseInt(e.target.value))}
-          className="bg-gray-700 text-white p-1 rounded"
-        >
-          {languageOptions.map((l) => (
-            <option key={l.id} value={l.id}>
-              {l.name}
-            </option>
-          ))}
-        </select>
-      </div>
-
-      {/* Code Editor + Output */}
-      <div className="flex flex-1">
-        <Editor
-          height="70vh"
-          width="70%"
-          theme="vs-dark"
-          language={languageOptions.find((l) => l.id === language)?.name.toLowerCase() || "javascript"}
-          value={codeEditor}
-          onChange={setCodeEditor}
-        />
-        <div className="w-1/3 p-4 bg-gray-800 border-l border-gray-700 overflow-auto">
+        <div className="bg-[#11172a] rounded-2xl shadow-lg p-5 border border-gray-800 overflow-auto">
           <button
             onClick={handleRunCode}
             disabled={loading}
-            className="bg-blue-600 px-4 py-2 rounded mb-4 hover:bg-blue-700"
+            className="bg-blue-600 px-5 py-2 rounded mb-4 hover:bg-blue-700 transition"
           >
             {loading ? "Running..." : "Run Code"}
           </button>
-          <h3 className="font-semibold mb-2">Test Case Results:</h3>
-          <div className="space-y-2">
-            {testResults.length === 0 && (
-              <p className="text-gray-400">Run the code to see results...</p>
-            )}
-            {testResults.map((t, i) => (
-              <div
-                key={i}
-                className={`p-2 rounded-md ${
-                  t.passed ? "bg-green-800 text-green-200" : "bg-red-800 text-red-200"
-                }`}
-              >
-                <strong>Test Case {i + 1}</strong>
-                <p>Input: {t.input}</p>
-                <p>Expected: {t.expected}</p>
-                <p>Output: {t.output}</p>
-                <p>Status: {t.passed ? "✅ Passed" : "❌ Failed"}</p>
-              </div>
-            ))}
-          </div>
+          <h3 className="font-semibold mb-2 text-lg text-blue-400">Test Case Results</h3>
+          {testResults.length === 0 && (
+            <p className="text-gray-400">Run the code to see results...</p>
+          )}
+          {testResults.map((t, i) => (
+            <div
+              key={i}
+              className={`p-3 rounded-lg mb-2 border ${
+                t.passed
+                  ? "bg-green-900/30 border-green-500/40 text-green-300"
+                  : "bg-red-900/30 border-red-500/40 text-red-300"
+              }`}
+            >
+              <strong>Test Case {i + 1}</strong>
+              <p>Input: {t.input}</p>
+              <p>Expected: {t.expected}</p>
+              <p>Output: {t.output}</p>
+              <p>Status: {t.passed ? "✅ Passed" : "❌ Failed"}</p>
+            </div>
+          ))}
         </div>
       </div>
     </div>

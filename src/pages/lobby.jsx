@@ -10,6 +10,12 @@ const Lobby = () => {
   const [difficulty, setDifficulty] = useState("Easy");
   const [roomCode, setRoomCode] = useState("");
 
+  useEffect(() => {
+    if (!user) {
+      navigate("/"); 
+    }
+  }, [navigate, user]);
+
   const handleCreateRoom = async () => {
     const code = Math.floor(100000 + Math.random() * 900000).toString();
     localStorage.setItem("roomCode", code);

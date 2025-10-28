@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { auth, provider, db } from "../firebase";
 import { signInWithPopup } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
@@ -10,9 +10,6 @@ const Home = ({ onLogin, onSignUp }) => {
   const [nickname, setNickname] = useState("");
   const [showNickname, setShowNickname] = useState(false);
   const navigate = useNavigate();
-    const particlesInit = async (main) => {
-    await loadFull(main);
-    };
 
   const handleLogin = async () => {
     try {

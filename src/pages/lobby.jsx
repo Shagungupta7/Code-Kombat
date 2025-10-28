@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { db } from "../firebase";
 import Particles from "react-tsparticles";
@@ -130,9 +130,10 @@ const Lobby = () => {
           font-family: "Orbitron", sans-serif;
           color: #fff;
           overflow: hidden;
+          z-index: 2;
         }
 
-        .lobby-card {
+        .lobby-card {       
           background: rgba(0, 0, 0, 0.7);
           padding: 40px 60px;
           border-radius: 16px;
@@ -140,7 +141,7 @@ const Lobby = () => {
           box-shadow: 0 0 20px #0ff;
           text-align: center;
           min-width: 350px;
-          z-index: 1;
+          z-index: 2;
         }
 
         .title {
@@ -216,6 +217,7 @@ const Lobby = () => {
           width: 100%;
           height: 100%;
           z-index: 0; /* background layer */
+          pointer-events: none;
         }
         .btn-neon:hover {
           box-shadow: 0 0 20px #0ff, 0 0 40px #0ff;

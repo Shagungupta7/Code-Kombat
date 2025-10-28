@@ -54,32 +54,71 @@ const Game = () => {
 
   // Timer
   useEffect(() => {
+    if (showWinnerModal) {
+      const interval = setInterval(() => {
+        setRedirectTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            navigate("/lobby");
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(interval);
+    }
+  }, [showWinnerModal, navigate]);
+
+  useEffect(() => {
     if (!startTime || !duration || gameOver) return;
+
     const interval = setInterval(() => {
-      const remaining = duration - Math.floor((Date.now() - startTime.getTime()) / 1000);
+      const elapsed = Math.floor((Date.now() - startTime.getTime()) / 1000);
+      const remaining = Math.max(duration - elapsed, 0);
+      setTimeLeft(remaining);
+
       if (remaining <= 0) {
-        setTimeLeft(0);
         clearInterval(interval);
-        handleGameOver(null);
-      } else setTimeLeft(remaining);
+        handleGameOver(null); // Time’s up → trigger game over
+      }
     }, 1000);
+
     return () => clearInterval(interval);
   }, [startTime, duration, gameOver]);
-
   // Game over handler
   const handleGameOver = async (winnerUID) => {
+    if (gameOver) return;
+
     setGameOver(true);
     setWinner(winnerUID || null);
 
     const roomRef = doc(db, "Rooms", code);
-    await updateDoc(roomRef, {
-      gameOver: true,
-      winner: winnerUID || null,
-    });
 
-    // Show winner modal (in-window)
-    setShowWinnerModal(true);
-  };
+    if (winnerUID) {
+      // 🏆 Case 1: Someone won
+      await updateDoc(roomRef, {
+        gameOver: true,
+        winner: winnerUID,
+      });
+    } else {
+      // ⏳ Case 2: Timer expired — delete the room
+      try {
+        await updateDoc(roomRef, {
+          gameOver: true,
+          winner: null,
+        });
+
+        // Give Firestore a moment to propagate, then delete
+        setTimeout(async () => {
+          await deleteDoc(roomRef);
+        }, 3000);
+      } catch (err) {
+        console.error("Error deleting room:", err);
+      }
+    }
+
+  // Show winner modal (in-window)
+  setShowWinnerModal(true);
+};
 
   // Countdown redirect when modal is shown
   useEffect(() => {
